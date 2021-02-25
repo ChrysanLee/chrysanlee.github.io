@@ -1,0 +1,70 @@
+<!--preferredFrameRate标准60-->
+<!DOCTYPE html>
+<meta charset="UTF-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1, user-scalable=no">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
+<meta http-equiv="Pragma" content="no-cache"/>
+<meta http-equiv="Expires" content="0"/>
+<head>
+    <title>Chrysan's RWGame</title>
+    <link rel="stylesheet" type="text/css" href="./index.css?t=1">
+</head>
+
+<body>
+<div class="screen_container">
+    <div id="nes-select" width="256" height="240" class="screen_body" style="display: none">
+    </div>
+    <canvas id="nes-canvas" width="256" height="240" class="screen_body"/>
+</div>
+<!--<div>-->
+<!--<span id="xy">text</span>-->
+<!--</div>-->
+<div style="display: flex;clear: both;">
+    <div class="" style="width: 20%">
+        <div class="operateSelect">
+            <div class="item"></div>
+            <div class="item"></div>
+        </div>
+    </div>
+    <div class="operateSelectWrap" style="margin-left:50px;width: 60%">
+        <div class="operateSelect">
+            <div class="item" id="btSelect"></div>
+            <div class="item" id="btPauseSelect"></div>
+            <div class="item" id="btStart"></div>
+        </div>
+    </div>
+    <div class="" style="width: 20%">
+        <div class="operateSelect">
+            <div class="item"></div>
+            <div class="item"></div>
+        </div>
+    </div>
+</div>
+<div class="operateAreaWrap">
+    <div class=" operateAreaItem">
+    </div>
+    <div class="operateABWrap operateAreaItem" style="margin: 50px 0 0 38px;">
+        <div class="operateAB">
+            <div class="item" id="btBTemp"></div>
+            <div class="item" id="btA"></div>
+        </div>
+        <div class="operateAB">
+            <div class="item" id="btB"></div>
+            <div class="item" id="btATemp"></div>
+        </div>
+    </div>
+</div>
+<div class="ab" id="btAB"></div>
+
+<!-- 摇杆 -->
+<div class="joystick" id="joystick">
+    <div class="inside" id="inside"></div>
+</div>
+<!-- 摇杆可用的拖动区域 -->
+<div class="drag" id="drag"></div>
+</body>
+<script src="jquery-1.8.0.js"></script>
+<script src="jsnes.min.js"></script>
+<script src="./index.js?t=1"></script>
+</html>

@@ -1,0 +1,252 @@
+body,
+div {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background: #c1c3c5;
+    /*background: #6F6FFF;*/
+    overflow: hidden;
+}
+
+.screen_container {
+    width: 100%;
+    margin: 5% 0 0 0;
+    padding: 1% 0% 1% 0%;
+    border-radius: 20px;
+    background: #546463;
+    height: 340px;
+}
+
+.screen_body {
+    /*width:89%;*/
+    /*margin:0 ;*/
+    /*padding:0%;*/
+    margin: 0px 5px 5px 5px;
+    border-radius: 20px;
+    background: #E6E6E6;
+    height: 340px;
+    width: 98%;
+}
+
+.Screen {
+    width: 100%;
+}
+
+.gamepad {
+    width: 100%;
+    height: 100%;
+}
+
+.btn {
+    margin-top: 50px;
+    width: 80px;
+    height: 20px;
+    background-color: #ffffff;
+}
+
+.operateDirectWrap {
+    height: 170px;
+    width: 170px;
+    background-image: url('./static/image/btn_direction_170.png');
+    background-repeat: no-repeat;
+}
+
+.operateDirectWrap .operateDirect {
+    height: 56px;
+    width: 170px;
+    display: flex;
+    /*background-color: violet;*/
+}
+
+.operateDirectWrap .operateDirect .item {
+    width: 33%;
+    height: 100%;
+    /*padding: 10px;*/
+    /*background-color: white;*/
+    /*border: 1px solid red;*/
+}
+
+.operateABWrap {
+    height: 107px;
+    width: 120px;
+    background-image: url('./static/image/btn_AB_120_107.png');
+    background-repeat: no-repeat;
+}
+
+.operateABWrap .operateAB {
+    /*height: 53px;*/
+    /*width: 120px;*/
+    height: 60px;
+    width: 125px;
+    display: flex;
+    /*background-color: violet;*/
+}
+
+.operateABWrap .operateAB .item {
+    width: 50%;
+    height: 100%;
+    /*padding: 10px;*/
+    /*background-color: white;*/
+    /*border: 1px solid red;*/
+}
+
+.operateAreaWrap {
+    width: 100%;
+    height: 170px;
+    display: flex;
+}
+
+.operateAreaWrap .operateAreaItem {
+    width: 50%;
+    height: 100%;
+    margin: 30px 10px 10px 20px;
+}
+
+.operateSelectWrap {
+    margin-top: 30px;
+    height: 50px;
+    width: 100%;
+    /*/!*background-image: url('/static/image/btn_ctrl_100_50.png');*!/*/
+    background-image: url('./static/image/btn_ctrl_cn_150_50.png');
+    background-repeat: no-repeat;
+}
+
+.operateSelectWrap .operateSelect {
+    height: 50px;
+    width: 150px;
+    display: flex;
+    /*background-color: violet;*/
+}
+
+.operateSelectWrap .operateSelect .item {
+    width: 30%;
+    height: 100%;
+    /*background-color: white;*/
+    /*border: 1px solid red;*/
+}
+
+/*浏览器选择*/
+
+* {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.footer_btn {
+    height: 60px;
+    width: 60px;
+    /*border: 1px solid #ffffff;*/
+    float: left;
+    margin-right: 10px;
+    text-align: center;
+    background-image: url("./static/image/play_go.png");
+}
+
+.footer_play_go {
+    background-image: url("./static/image/play_go.png");
+}
+
+.footer_play_back {
+    background-image: url("./static/image/play_back.png");
+}
+
+.footer_btn_none_margin {
+    margin-right: 0;
+}
+
+.gameListWrap {
+    height: 260px;
+    overflow-y: auto;
+    border-bottom: 1px solid #ffffff;
+}
+
+.gameListWrap .game {
+    display: flex;
+    width: 96%;
+    padding: 1% 2% 0% 2%;
+    text-align: center
+}
+
+.gameListWrap .game .item {
+    width: 20%;
+    height: 80px;
+    margin: 1px;
+    border: 1px solid #ffffff;
+    line-height: 10px;
+}
+
+.chooseGame_Y {
+    background-color: #77DD05;
+    color: #ffffff
+}
+
+.chooseGame_N {
+    background-color: #ffffff;
+    color: black;
+}
+
+.drag {
+    /* 拖动区域，在js里设置宽高 */
+    left: 0;
+    bottom: 0;
+    position: fixed;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 50%;
+    height: 200px;
+    margin-bottom: 50px;
+}
+
+.joystick {
+    left: 50%;
+    bottom: 0;
+    position: absolute;
+    background-color: #8C8C8C; /* 操作杆背景颜色*/
+    border: solid 0.5rem rgba(200, 200, 200, 1); /* 操作杆边框颜色*/
+    border-radius: 50%;
+    /* 用户不可选择复制控件文本 */
+    -webkit-touch-callout: none; /*系统默认菜单被禁用*/
+    -webkit-user-select: none; /*webkit浏览器*/
+    -khtml-user-select: none; /*早期浏览器*/
+    -moz-user-select: none; /*火狐*/
+    -ms-user-select: none; /*IE10*/
+    user-select: none;
+}
+
+.joystick .inside { /* 仅仅是为了美观这里，白色拖动按钮*/
+    position: absolute;
+    border-radius: 50%;
+    /*border: solid 0.3rem rgba(42,42,43,0.2);*/
+    border: solid 0.3rem #252525;
+    /*background-color: rgba(255,255,255,0.8);*/
+    background-color: #822525;
+}
+
+.test {
+    width: 2rem;
+    height: 2rem;
+    left: 50%;
+    top: 50%;
+    margin: -1rem -1rem;
+    position: absolute;
+    background-color: mediumaquamarine;
+    border-radius: 40%;
+}
+
+.ab {
+    position: absolute;
+    border-radius: 50%;
+    border: solid 5px #252525;
+    background-color: #822525;
+    height: 39px;
+    width: 39px;
+    right: 28px;
+    bottom: 245px;
+}
