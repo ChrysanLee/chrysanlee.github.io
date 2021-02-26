@@ -10,50 +10,34 @@
     <title>Chrysan's RWGame</title>
     <link rel="stylesheet" type="text/css" href="./css/index.css?t=1">
 </head>
-
 <body>
 <div class="">
-<div class="screen_container">
-    <div id="nes-select" width="256" height="240" class="screen_body" style="display: none">
-    </div>
-    <canvas id="nes-canvas" width="256" height="240" class="screen_body"/>
-</div>
-<!--<div>-->
-<!--<span id="xy">text</span>-->
-<!--</div>-->
-<div style="display: flex;clear: both;">
-    <div class="" style="width: 20%">
-        <div class="operateSelect">
-            <div class="item"></div>
-            <div class="item"></div>
+    <!-- 绘图区域 -->
+    <div class="screen_container">
+        <div id="nes-select" width="256" height="240" class="screen_body" style="display: none">
         </div>
+        <canvas id="nes-canvas" width="256" height="240" class="screen_body"/>
     </div>
-    <div class="operateSelectWrap" style="margin-left:2.5rem;width: 60%">
-        <div class="operateSelect">
-            <div class="item" id="btSelect"></div>
-            <div class="item" id="btPauseSelect"></div>
-            <div class="item" id="btStart"></div>
+    <!-- 控制区域 -->
+    <div class="operateSelectWrap">
+        <div class="item" id="btSelect"></div>
+        <div class="item" id="btPauseSelect"></div>
+        <div class="item" id="btStart"></div>
+    </div>
+    <!-- 组合键 -->
+    <div class="operateABPlus" id="btAB"></div>
+    <!-- 摇杆 -->
+    <div class="joystick" id="joystick">
+        <div class="inside" id="inside"></div>
+    </div>
+    <!-- 摇杆可用的拖动区域 -->
+    <div class="drag" id="drag"></div>
+    <!-- A B 按钮操作区域-->
+    <div class="operateABWrap">
+        <div class="operateAB">
+            <div class="item" id="btB"></div>
+            <div class="item" id="btA"></div>
         </div>
-    </div>
-    <div class="" style="width: 20%">
-        <div class="operateSelect">
-            <div class="item"></div>
-            <div class="item"></div>
-        </div>
-    </div>
-</div>
-<div class="ab" id="btAB"></div>
-
-<!-- 摇杆 -->
-<div class="joystick" id="joystick">
-    <div class="inside" id="inside"></div>
-</div>
-<!-- 摇杆可用的拖动区域 -->
-<div class="drag" id="drag"></div>
-<div class="operateABWrap">
-    <div class="operateAB">
-        <div class="item" id="btB"></div>
-        <div class="item" id="btA"></div>
     </div>
 </div>
 </body>

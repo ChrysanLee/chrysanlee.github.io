@@ -124,22 +124,20 @@ body {
 }
 
 .operateSelectWrap {
-    margin-top: 1.5rem;
+    position: absolute;
+    display: flex;
+    width: 7.5rem;
     height: 2.5rem;
-    width: 100%;
+    margin-left: 5.68rem;
+    margin-bottom: 11.25rem;
+    bottom: 0;
+    left: 0;
     background-image: url('../static/image/btn_ctrl_cn_150_50.png');
     background-repeat: no-repeat;
 }
 
-.operateSelectWrap .operateSelect {
-    height: 2.5rem;
-    width: 7.5rem;
-    display: flex;
-    /*background-color: violet;*/
-}
-
-.operateSelectWrap .operateSelect .item {
-    width: 30%;
+.operateSelectWrap .item {
+    width: 33.3%;
     height: 100%;
 }
 
@@ -252,7 +250,7 @@ body {
     border-radius: 40%;
 }
 
-.ab {
+.operateABPlus {
     position: absolute;
     border-radius: 50%;
     border: solid 0.25rem #252525;
