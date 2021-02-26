@@ -8,10 +8,11 @@
 <meta http-equiv="Expires" content="0"/>
 <head>
     <title>Chrysan's RWGame</title>
-    <link rel="stylesheet" type="text/css" href="./index.css?t=1">
+    <link rel="stylesheet" type="text/css" href="./css/index.css?t=1">
 </head>
 
 <body>
+<div class="">
 <div class="screen_container">
     <div id="nes-select" width="256" height="240" class="screen_body" style="display: none">
     </div>
@@ -27,7 +28,7 @@
             <div class="item"></div>
         </div>
     </div>
-    <div class="operateSelectWrap" style="margin-left:50px;width: 60%">
+    <div class="operateSelectWrap" style="margin-left:2.5rem;width: 60%">
         <div class="operateSelect">
             <div class="item" id="btSelect"></div>
             <div class="item" id="btPauseSelect"></div>
@@ -41,20 +42,6 @@
         </div>
     </div>
 </div>
-<div class="operateAreaWrap">
-    <div class=" operateAreaItem">
-    </div>
-    <div class="operateABWrap operateAreaItem" style="margin: 50px 0 0 38px;">
-        <div class="operateAB">
-            <div class="item" id="btBTemp"></div>
-            <div class="item" id="btA"></div>
-        </div>
-        <div class="operateAB">
-            <div class="item" id="btB"></div>
-            <div class="item" id="btATemp"></div>
-        </div>
-    </div>
-</div>
 <div class="ab" id="btAB"></div>
 
 <!-- 摇杆 -->
@@ -63,8 +50,15 @@
 </div>
 <!-- 摇杆可用的拖动区域 -->
 <div class="drag" id="drag"></div>
+<div class="operateABWrap">
+    <div class="operateAB">
+        <div class="item" id="btB"></div>
+        <div class="item" id="btA"></div>
+    </div>
+</div>
 </body>
-<script src="jquery-1.8.0.js"></script>
-<script src="jsnes.min.js"></script>
-<script src="./index.js?t=1"></script>
+<script src="./js/jquery-1.8.0.js"></script>
+<script src="./js/jsnes.min.js"></script>
+<script src="./js/game-list.js?t=1"></script>
+<script src="./js/index.js?t=1"></script>
 </html>

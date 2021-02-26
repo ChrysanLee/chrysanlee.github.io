@@ -1,3 +1,33 @@
+html {
+    font-size : 20px;  /* 默认14 */
+}
+@media only screen and (min-width: 401px){
+    html {
+        font-size: 25px !important;
+    }
+}
+
+@media only screen and (min-width: 428px){
+    html {
+        font-size: 26.75px !important;
+    }
+}
+@media only screen and (min-width: 481px){
+    html {
+        font-size: 30px !important;
+    }
+}
+@media only screen and (min-width: 569px){
+    html {
+        font-size: 35px !important;
+    }
+}
+@media only screen and (min-width: 641px){
+    html {
+        font-size: 40px !important;
+    }
+}
+
 body,
 div {
     margin: 0;
@@ -6,7 +36,6 @@ div {
 
 body {
     background: #c1c3c5;
-    /*background: #6F6FFF;*/
     overflow: hidden;
 }
 
@@ -16,17 +45,17 @@ body {
     padding: 1% 0% 1% 0%;
     border-radius: 20px;
     background: #546463;
-    height: 340px;
+    /*height: 340px;*/
+    height: 17rem;
 }
 
 .screen_body {
-    /*width:89%;*/
-    /*margin:0 ;*/
-    /*padding:0%;*/
-    margin: 0px 5px 5px 5px;
-    border-radius: 20px;
+    /*margin: 0px 5px 5px 5px;*/
+    margin: 0px 0.25rem 0.25rem 0.25rem;
+    /*border-radius: 20px;*/
+    border-radius: 1rem;
     background: #E6E6E6;
-    height: 340px;
+    height: 17rem;
     width: 98%;
 }
 
@@ -40,82 +69,71 @@ body {
 }
 
 .btn {
-    margin-top: 50px;
-    width: 80px;
-    height: 20px;
+    margin-top: 2.5rem;
+    width: 4rem;
+    height: 1rem;
     background-color: #ffffff;
 }
 
 .operateDirectWrap {
-    height: 170px;
-    width: 170px;
-    background-image: url('./static/image/btn_direction_170.png');
+    height: 8.5rem;
+    width: 8.5rem;
+    background-image: url('../static/image/btn_direction_170.png');
     background-repeat: no-repeat;
 }
 
 .operateDirectWrap .operateDirect {
-    height: 56px;
-    width: 170px;
+    height: 2.8rem;
+    width: 8.5rem;
     display: flex;
-    /*background-color: violet;*/
 }
 
 .operateDirectWrap .operateDirect .item {
     width: 33%;
     height: 100%;
-    /*padding: 10px;*/
-    /*background-color: white;*/
-    /*border: 1px solid red;*/
 }
 
-.operateABWrap {
-    height: 107px;
-    width: 120px;
-    background-image: url('./static/image/btn_AB_120_107.png');
-    background-repeat: no-repeat;
-}
+/*.operateABWrap {*/
+    /*height: 5.35rem;*/
+    /*width: 6rem;*/
+    /*background-image: url('../static/image/btn_AB_120_107.png');*/
+    /*background-repeat: no-repeat;*/
+/*}*/
 
-.operateABWrap .operateAB {
-    /*height: 53px;*/
-    /*width: 120px;*/
-    height: 60px;
-    width: 125px;
-    display: flex;
-    /*background-color: violet;*/
-}
+/*.operateABWrap .operateAB {*/
+    /*height: 3rem;*/
+    /*width: 6.25rem;*/
+    /*display: flex;*/
+/*}*/
 
-.operateABWrap .operateAB .item {
-    width: 50%;
-    height: 100%;
-    /*padding: 10px;*/
-    /*background-color: white;*/
-    /*border: 1px solid red;*/
-}
+/*.operateABWrap .operateAB .item {*/
+    /*width: 50%;*/
+    /*height: 100%;*/
+/*}*/
 
 .operateAreaWrap {
     width: 100%;
-    height: 170px;
+    height: 8.5rem;
     display: flex;
 }
 
 .operateAreaWrap .operateAreaItem {
     width: 50%;
     height: 100%;
-    margin: 30px 10px 10px 20px;
+    margin: 1.5rem 0.5rem 0.5rem 1rem;
 }
 
 .operateSelectWrap {
-    margin-top: 30px;
-    height: 50px;
+    margin-top: 1.5rem;
+    height: 2.5rem;
     width: 100%;
-    /*/!*background-image: url('/static/image/btn_ctrl_100_50.png');*!/*/
-    background-image: url('./static/image/btn_ctrl_cn_150_50.png');
+    background-image: url('../static/image/btn_ctrl_cn_150_50.png');
     background-repeat: no-repeat;
 }
 
 .operateSelectWrap .operateSelect {
-    height: 50px;
-    width: 150px;
+    height: 2.5rem;
+    width: 7.5rem;
     display: flex;
     /*background-color: violet;*/
 }
@@ -123,11 +141,7 @@ body {
 .operateSelectWrap .operateSelect .item {
     width: 30%;
     height: 100%;
-    /*background-color: white;*/
-    /*border: 1px solid red;*/
 }
-
-/*浏览器选择*/
 
 * {
     -webkit-touch-callout: none;
@@ -139,21 +153,21 @@ body {
 }
 
 .footer_btn {
-    height: 60px;
-    width: 60px;
+    height: 3rem;
+    width: 3rem;
     /*border: 1px solid #ffffff;*/
     float: left;
-    margin-right: 10px;
+    margin-right: 0.5rem;
     text-align: center;
-    background-image: url("./static/image/play_go.png");
+    background-image: url("../static/image/play_go.png");
 }
 
 .footer_play_go {
-    background-image: url("./static/image/play_go.png");
+    background-image: url("../static/image/play_go.png");
 }
 
 .footer_play_back {
-    background-image: url("./static/image/play_back.png");
+    background-image: url("../static/image/play_back.png");
 }
 
 .footer_btn_none_margin {
@@ -161,7 +175,7 @@ body {
 }
 
 .gameListWrap {
-    height: 260px;
+    height: 13rem;
     overflow-y: auto;
     border-bottom: 1px solid #ffffff;
 }
@@ -175,10 +189,10 @@ body {
 
 .gameListWrap .game .item {
     width: 20%;
-    height: 80px;
-    margin: 1px;
-    border: 1px solid #ffffff;
-    line-height: 10px;
+    height: 4rem;
+    margin: 0.05rem;
+    border: 0.05rem solid #ffffff;
+    line-height: 0.5rem;
 }
 
 .chooseGame_Y {
@@ -200,16 +214,16 @@ body {
     justify-content: center;
     align-items: center;
     width: 50%;
-    height: 200px;
-    margin-bottom: 50px;
+    height: 10rem;
+    margin-bottom: 2.5rem;
 }
 
 .joystick {
-    left: 50%;
+    /*left: 50%;*/
     bottom: 0;
     position: absolute;
     background-color: #8C8C8C; /* 操作杆背景颜色*/
-    border: solid 0.5rem rgba(200, 200, 200, 1); /* 操作杆边框颜色*/
+    border: solid 0.35rem rgba(200, 200, 200, 1); /* 操作杆边框颜色*/
     border-radius: 50%;
     /* 用户不可选择复制控件文本 */
     -webkit-touch-callout: none; /*系统默认菜单被禁用*/
@@ -223,18 +237,16 @@ body {
 .joystick .inside { /* 仅仅是为了美观这里，白色拖动按钮*/
     position: absolute;
     border-radius: 50%;
-    /*border: solid 0.3rem rgba(42,42,43,0.2);*/
-    border: solid 0.3rem #252525;
-    /*background-color: rgba(255,255,255,0.8);*/
+    border: solid 0.21rem #252525;
     background-color: #822525;
 }
 
 .test {
-    width: 2rem;
-    height: 2rem;
+    width: 1.4rem;
+    height: 1.4rem;
     left: 50%;
     top: 50%;
-    margin: -1rem -1rem;
+    margin: -0.7rem -0.7rem;
     position: absolute;
     background-color: mediumaquamarine;
     border-radius: 40%;
@@ -243,10 +255,30 @@ body {
 .ab {
     position: absolute;
     border-radius: 50%;
-    border: solid 5px #252525;
+    border: solid 0.25rem #252525;
     background-color: #822525;
-    height: 39px;
-    width: 39px;
-    right: 28px;
-    bottom: 245px;
+    height: 1.95rem;
+    width: 1.95rem;
+    right: 1.4rem;
+    bottom: 11rem;
+}
+
+.operateABWrap{
+    position: absolute;
+    width: 6rem;
+    height: 5.35rem;
+    bottom: 0;
+    right: 0;
+    margin-bottom: 5.3rem;
+    margin-right: 1.5rem;
+    background-image: url('../static/image/btn_AB_120_107.png');
+    background-repeat: no-repeat;
+}
+.operateABWrap .operateAB{
+    width: 100%;
+    display: flex;
+}
+.operateABWrap .operateAB .item{
+    width: 50%;
+    height: 5.35rem;
 }
