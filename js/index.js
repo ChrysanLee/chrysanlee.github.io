@@ -114,6 +114,7 @@ $drag.bind("touchend",function(e){
 
 
 // ---------------游戏装载
+console.log($("html").height())
 var SCREEN_WIDTH = 256;
 var SCREEN_HEIGHT = 240;
 var FRAMEBUFFER_SIZE = SCREEN_WIDTH * SCREEN_HEIGHT;
@@ -323,6 +324,13 @@ $("#btAB").on("touchstart", function () {
 })
 $("#btAB").on("touchend", function () {
     btUp.a();
+    btUp.b();
+})
+
+$("#btOnlyA").on("touchstart", function () {
+    btDown.b();
+})
+$("#btOnlyA").on("touchend", function () {
     btUp.b();
 })
 

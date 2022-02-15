@@ -28,15 +28,16 @@ html {
     }
 }
 
+body {
+    background: #c1c3c5;
+    overflow: hidden;
+    height: 100%;width: 100%
+}
+
 body,
 div {
     margin: 0;
     padding: 0;
-}
-
-body {
-    background: #c1c3c5;
-    overflow: hidden;
 }
 
 .screen_container {
@@ -45,7 +46,6 @@ body {
     padding: 1% 0% 1% 0%;
     border-radius: 20px;
     background: #546463;
-    /*height: 340px;*/
     height: 17rem;
 }
 
@@ -129,7 +129,7 @@ body {
     width: 7.5rem;
     height: 2.5rem;
     margin-left: 5.68rem;
-    margin-bottom: 11.25rem;
+    margin-bottom: 12.25rem;
     bottom: 0;
     left: 0;
     background-image: url('../static/image/btn_ctrl_cn_150_50.png');
@@ -255,9 +255,20 @@ body {
     border-radius: 50%;
     border: solid 0.25rem #252525;
     background-color: #822525;
-    height: 1.95rem;
-    width: 1.95rem;
-    right: 1.4rem;
+    height: 1.66rem;
+    width: 1.66rem;
+    right: 0.9rem;
+    bottom: 11rem;
+}
+
+.operateAPlus {
+    position: absolute;
+    border-radius: 50%;
+    border: solid 0.25rem #252525;
+    background-color: #822525;
+    height: 1.66rem;
+    width: 1.66rem;
+    right: 3.5rem;
     bottom: 11rem;
 }
 
