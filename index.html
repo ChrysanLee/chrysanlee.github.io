@@ -1,70 +1,108 @@
-<!--preferredFrameRate标准60-->
-<!DOCTYPE html>
-<meta charset="UTF-8">
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1, user-scalable=no">
-<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
-<meta http-equiv="Pragma" content="no-cache"/>
-<meta http-equiv="Expires" content="0"/>
+<!doctype html>
+<html lang="zh-CN">
 <head>
-    <title>Chrysan's RWGame</title>
-    <link rel="stylesheet" type="text/css" href="./index.css?t=1">
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>RW Pocket - JSNES</title>
+    <link rel="stylesheet" type="text/css" href="./index.css?v=6">
 </head>
-
 <body>
-<div class="screen_container">
-    <div id="nes-select" width="256" height="240" class="screen_body" style="display: none">
-    </div>
-    <canvas id="nes-canvas" width="256" height="240" class="screen_body"/>
-</div>
-<!--<div>-->
-<!--<span id="xy">text</span>-->
-<!--</div>-->
-<div style="display: flex;clear: both;">
-    <div class="" style="width: 20%">
-        <div class="operateSelect">
-            <div class="item"></div>
-            <div class="item"></div>
-        </div>
-    </div>
-    <div class="operateSelectWrap" style="margin-left:50px;width: 60%">
-        <div class="operateSelect">
-            <div class="item" id="btSelect"></div>
-            <div class="item" id="btPauseSelect"></div>
-            <div class="item" id="btStart"></div>
-        </div>
-    </div>
-    <div class="" style="width: 20%">
-        <div class="operateSelect">
-            <div class="item"></div>
-            <div class="item"></div>
-        </div>
-    </div>
-</div>
-<div class="operateAreaWrap">
-    <div class=" operateAreaItem">
-    </div>
-    <div class="operateABWrap operateAreaItem" style="margin: 50px 0 0 38px;">
-        <div class="operateAB">
-            <div class="item" id="btBTemp"></div>
-            <div class="item" id="btA"></div>
-        </div>
-        <div class="operateAB">
-            <div class="item" id="btB"></div>
-            <div class="item" id="btATemp"></div>
-        </div>
-    </div>
-</div>
-<div class="ab" id="btAB"></div>
+<main class="page">
+    <section class="console-shell">
+        <header class="console-top">
+            <div>
+                <div class="brand">RW Pocket</div>
+                <div id="current-game" class="current-game">1943</div>
+            </div>
+            <div class="top-actions">
+                <button id="open-library" class="tiny-btn library-btn" type="button">Game Library</button>
+                <div class="power-wrap">
+                    <span class="led"></span>
+                    <span id="status-text">Booting</span>
+                </div>
+            </div>
+        </header>
 
-<!-- 摇杆 -->
-<div class="joystick" id="joystick">
-    <div class="inside" id="inside"></div>
-</div>
-<!-- 摇杆可用的拖动区域 -->
-<div class="drag" id="drag"></div>
+        <div class="screen-bezel">
+            <canvas id="nes-canvas" width="256" height="240"></canvas>
+            <div id="boot-overlay" class="boot-overlay">Loading ROM...</div>
+        </div>
+
+        <section class="control-panel">
+            <div class="left-controls">
+                <div id="stick-zone" class="stick-zone" aria-label="D-pad joystick">
+                    <div class="stick-base"></div>
+                    <div id="stick-knob" class="stick-knob"></div>
+                </div>
+            </div>
+
+            <div class="middle-controls">
+                <button id="btn-select" class="pill-btn" type="button">SELECT</button>
+                <button id="btn-start" class="pill-btn" type="button">START</button>
+            </div>
+
+            <div class="right-controls">
+                <button id="btn-b" class="action-btn btn-b" type="button">B</button>
+                <button id="btn-a" class="action-btn btn-a" type="button">A</button>
+            </div>
+        </section>
+
+        <footer class="help-bar">
+            <button id="open-shortcuts" class="tiny-btn shortcut-btn" type="button">快捷键说明</button>
+            <div class="help-actions">
+                <button id="toggle-pause" class="tiny-btn" type="button">暂停</button>
+                <button id="save-state" class="tiny-btn" type="button">存档</button>
+                <button id="load-state" class="tiny-btn" type="button">读档</button>
+                <button id="resume-audio" class="tiny-btn" type="button">静音</button>
+            </div>
+        </footer>
+
+        <section id="shortcut-overlay" class="shortcut-overlay is-hidden" aria-hidden="true">
+            <div class="shortcut-panel">
+                <div class="shortcut-header">
+                    <h3>快捷键说明</h3>
+                    <button id="close-shortcuts" class="tiny-btn" type="button">关闭</button>
+                </div>
+                <ul class="shortcut-list">
+                    <li><span>方向（上/下/左/右）</span><code>W / S / A / D</code></li>
+                    <li><span>A / B</span><code>K / J</code></li>
+                    <li><span>Select / Start</span><code>[ / ]</code></li>
+                    <li><span>存档 / 读档</span><code>- / =</code></li>
+                    <li><span>暂停 / 恢复</span><code>Enter</code></li>
+                </ul>
+            </div>
+        </section>
+
+        <section id="library-overlay" class="library-overlay is-hidden" aria-hidden="true">
+            <div class="library-panel">
+                <div class="library-header">
+                    <div>
+                        <h2>Game Library</h2>
+                        <p id="library-subtitle">Pick a ROM to start instantly.</p>
+                    </div>
+                    <button id="close-library" class="tiny-btn" type="button">Close</button>
+                </div>
+                <div class="library-toolbar">
+                    <input id="game-search" class="search-input" type="text" placeholder="Search game name...">
+                    <div class="toolbar-right">
+                        <span id="game-count" class="game-count">0 games</span>
+                        <button id="random-game" class="tiny-btn" type="button">Random</button>
+                    </div>
+                </div>
+                <div id="game-grid" class="game-grid"></div>
+                <div class="library-footer">
+                    <button id="load-selected" class="tiny-btn primary-btn" type="button">Load Selected</button>
+                </div>
+            </div>
+        </section>
+    </section>
+</main>
+
+<script src="./jsnes.min.js"></script>
+<script src="./index.js?v=6"></script>
 </body>
-<script src="jquery-1.8.0.js"></script>
-<script src="jsnes.min.js"></script>
-<script src="./index.js?t=1"></script>
 </html>
