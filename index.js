@@ -6,6 +6,12 @@ const DEFAULT_ROM_FILE = "1943.nes";
 const GAME_LIST_PATH = "./static/game-list.json?v=1";
 const SAVE_KEY_PREFIX = "rw-pocket:save:";
 const SAVE_SCHEMA_VERSION = 1;
+const SPEED_STORAGE_KEY = "rw-pocket:speed-percent";
+const DEFAULT_SPEED_PERCENT = 100;
+const MIN_SPEED_PERCENT = 50;
+const MAX_SPEED_PERCENT = 150;
+const FRAME_DURATION = 1000 / 60;
+const TURBO_INTERVAL_MS = 70;
 
 const AUDIO_BUFFERING = 512;
 const SAMPLE_COUNT = 4 * 1024;
@@ -45,6 +51,8 @@ const loadStateButton = document.getElementById("load-state");
 const openShortcutsButton = document.getElementById("open-shortcuts");
 const closeShortcutsButton = document.getElementById("close-shortcuts");
 const shortcutOverlay = document.getElementById("shortcut-overlay");
+const speedSlider = document.getElementById("speed-slider");
+const speedValue = document.getElementById("speed-value");
 
 let canvasCtx = null;
 let imageData = null;
@@ -68,19 +76,28 @@ let games = [];
 let visibleGames = [];
 let selectedGameFile = DEFAULT_ROM_FILE;
 let currentGameFile = DEFAULT_ROM_FILE;
+let speedPercent = DEFAULT_SPEED_PERCENT;
+let speedMultiplier = 1;
+let lastFrameTime = 0;
+let frameAccumulator = 0;
+let nes = null;
+let loadRequestId = 0;
+const turboTimers = new Map();
 
-const nes = new jsnes.NES({
-    onFrame(framebuffer24) {
-        for (let i = 0; i < FRAMEBUFFER_SIZE; i += 1) {
-            framebufferU32[i] = 0xff000000 | framebuffer24[i];
+function createNesInstance() {
+    return new jsnes.NES({
+        onFrame(framebuffer24) {
+            for (let i = 0; i < FRAMEBUFFER_SIZE; i += 1) {
+                framebufferU32[i] = 0xff000000 | framebuffer24[i];
+            }
+        },
+        onAudioSample(left, right) {
+            audioSamplesL[audioWriteCursor] = left;
+            audioSamplesR[audioWriteCursor] = right;
+            audioWriteCursor = (audioWriteCursor + 1) & SAMPLE_MASK;
         }
-    },
-    onAudioSample(left, right) {
-        audioSamplesL[audioWriteCursor] = left;
-        audioSamplesR[audioWriteCursor] = right;
-        audioWriteCursor = (audioWriteCursor + 1) & SAMPLE_MASK;
-    }
-});
+    });
+}
 
 function setOverlay(text) {
     bootOverlay.textContent = text;
@@ -101,6 +118,52 @@ function setCurrentGame(name) {
 
 function getSaveKey(fileName) {
     return `${SAVE_KEY_PREFIX}${encodeURIComponent(fileName)}`;
+}
+
+function clampSpeedPercent(value) {
+    const numeric = Number(value);
+    if (!Number.isFinite(numeric)) {
+        return DEFAULT_SPEED_PERCENT;
+    }
+    return Math.min(MAX_SPEED_PERCENT, Math.max(MIN_SPEED_PERCENT, Math.round(numeric)));
+}
+
+function persistSpeedPercent() {
+    try {
+        localStorage.setItem(SPEED_STORAGE_KEY, String(speedPercent));
+    } catch (error) {
+        console.warn("Persist speed failed:", error);
+    }
+}
+
+function syncSpeedSliderFill() {
+    const fill = ((speedPercent - MIN_SPEED_PERCENT) / (MAX_SPEED_PERCENT - MIN_SPEED_PERCENT)) * 100;
+    speedSlider.style.setProperty("--speed-fill", `${fill}%`);
+}
+
+function updateSpeedUI() {
+    speedSlider.value = String(speedPercent);
+    speedValue.textContent = `${speedPercent}%`;
+    syncSpeedSliderFill();
+}
+
+function applySpeedPercent(value, persist) {
+    speedPercent = clampSpeedPercent(value);
+    speedMultiplier = speedPercent / 100;
+    updateSpeedUI();
+    if (persist) {
+        persistSpeedPercent();
+    }
+}
+
+function readSavedSpeedPercent() {
+    try {
+        const raw = localStorage.getItem(SPEED_STORAGE_KEY);
+        return raw ? clampSpeedPercent(raw) : DEFAULT_SPEED_PERCENT;
+    } catch (error) {
+        console.warn("Read speed failed:", error);
+        return DEFAULT_SPEED_PERCENT;
+    }
 }
 
 function readSavePayload(fileName) {
@@ -225,6 +288,8 @@ async function loadCurrentState() {
         await ensureAudio();
         releaseAllButtons();
         setOverlay("Loading Save...");
+        resetAudioBuffer();
+        resetEmulatorTiming();
         nes.fromJSON(payload.state);
         romLoaded = true;
         updateRuntimeButtons();
@@ -272,16 +337,19 @@ function normalizeGameItem(item) {
 function initCanvas() {
     canvasCtx = canvas.getContext("2d");
     imageData = canvasCtx.getImageData(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-    canvasCtx.fillStyle = "black";
-    canvasCtx.fillRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-
     const buffer = new ArrayBuffer(imageData.data.length);
     framebufferU8 = new Uint8ClampedArray(buffer);
     framebufferU32 = new Uint32Array(buffer);
+    clearScreen();
 }
 
-function audioRemain() {
-    return (audioWriteCursor - audioReadCursor) & SAMPLE_MASK;
+function clearScreen() {
+    if (!canvasCtx || !imageData || !framebufferU8) {
+        return;
+    }
+    framebufferU8.fill(0);
+    imageData.data.set(framebufferU8);
+    canvasCtx.putImageData(imageData, 0, 0);
 }
 
 function onAudioProcess(event) {
@@ -297,17 +365,21 @@ function onAudioProcess(event) {
         return;
     }
 
-    if (audioRemain() < AUDIO_BUFFERING) {
-        nes.frame();
-    }
+    const available = (audioWriteCursor - audioReadCursor) & SAMPLE_MASK;
+    const sampleCount = Math.min(length, available);
 
-    for (let i = 0; i < length; i += 1) {
+    for (let i = 0; i < sampleCount; i += 1) {
         const index = (audioReadCursor + i) & SAMPLE_MASK;
         left[i] = audioSamplesL[index];
         right[i] = audioSamplesR[index];
     }
 
-    audioReadCursor = (audioReadCursor + length) & SAMPLE_MASK;
+    if (sampleCount < length) {
+        left.fill(0, sampleCount);
+        right.fill(0, sampleCount);
+    }
+
+    audioReadCursor = (audioReadCursor + sampleCount) & SAMPLE_MASK;
 }
 
 function initAudio() {
@@ -352,11 +424,30 @@ function renderLoop() {
         return;
     }
 
+    const now = performance.now();
+    if (!lastFrameTime) {
+        lastFrameTime = now;
+    }
+
+    const delta = Math.min(now - lastFrameTime, 100);
+    lastFrameTime = now;
+
+    if (!isPaused) {
+        frameAccumulator += delta * speedMultiplier;
+        let framesToRun = Math.floor(frameAccumulator / FRAME_DURATION);
+        if (framesToRun > 5) {
+            framesToRun = 5;
+        }
+        if (framesToRun > 0) {
+            frameAccumulator -= framesToRun * FRAME_DURATION;
+            for (let i = 0; i < framesToRun; i += 1) {
+                nes.frame();
+            }
+        }
+    }
+
     imageData.data.set(framebufferU8);
     canvasCtx.putImageData(imageData, 0, 0);
-    if (!isPaused) {
-        nes.frame();
-    }
     window.requestAnimationFrame(renderLoop);
 }
 
@@ -379,12 +470,36 @@ function decodeRom(arrayBuffer) {
     return binary;
 }
 
+function resetAudioBuffer() {
+    audioWriteCursor = 0;
+    audioReadCursor = 0;
+    audioSamplesL.fill(0);
+    audioSamplesR.fill(0);
+}
+
+function resetEmulatorTiming() {
+    frameAccumulator = 0;
+    lastFrameTime = 0;
+}
+
+function rebuildNes() {
+    nes = createNesInstance();
+    resetAudioBuffer();
+    resetEmulatorTiming();
+}
+
 async function loadRom(path, title, fileName) {
+    const requestId = ++loadRequestId;
     releaseAllButtons();
     isPaused = false;
     updatePauseButton();
     setOverlay("Loading ROM...");
     setStatus("Booting");
+    romLoaded = false;
+    updateRuntimeButtons();
+    updateSaveInfo();
+    clearScreen();
+    rebuildNes();
 
     const response = await fetch(path, { cache: "no-store" });
     if (!response.ok) {
@@ -392,13 +507,17 @@ async function loadRom(path, title, fileName) {
     }
 
     const romData = decodeRom(await response.arrayBuffer());
+    if (requestId !== loadRequestId) {
+        return;
+    }
+
     nes.loadROM(romData);
     romLoaded = true;
     updateRuntimeButtons();
     currentGameFile = fileName || currentGameFile;
     setCurrentGame(title || "Unknown");
     hideOverlay();
-    setStatus("Ready");
+    setStatus("Running");
     updateSaveInfo();
     startLoop();
 }
@@ -527,6 +646,8 @@ async function loadSelectedGame() {
         await loadRom(toRomPath(selected.file), selected.title, selected.file);
         closeLibrary();
     } catch (error) {
+        romLoaded = false;
+        updateRuntimeButtons();
         setOverlay(`ROM load failed: ${selected.file}`);
         setStatus("Error");
         console.error(error);
@@ -617,6 +738,63 @@ function bindActionButton(element, button) {
     const release = (event) => {
         event.preventDefault();
         releaseButton(button, element);
+    };
+
+    if (window.PointerEvent) {
+        element.addEventListener("pointerdown", async (event) => {
+            if (element.setPointerCapture) {
+                try {
+                    element.setPointerCapture(event.pointerId);
+                } catch (error) {
+                    console.debug("setPointerCapture failed:", error);
+                }
+            }
+            await press(event);
+        });
+        element.addEventListener("pointerup", release);
+        element.addEventListener("pointercancel", release);
+        element.addEventListener("pointerleave", release);
+        return;
+    }
+
+    element.addEventListener("touchstart", press, { passive: false });
+    element.addEventListener("touchend", release, { passive: false });
+    element.addEventListener("touchcancel", release, { passive: false });
+    element.addEventListener("mousedown", press);
+    element.addEventListener("mouseup", release);
+    element.addEventListener("mouseleave", release);
+}
+
+function stopTurboButton(element, button) {
+    const timer = turboTimers.get(element);
+    if (timer) {
+        window.clearInterval(timer);
+        turboTimers.delete(element);
+    }
+    releaseButton(button, element);
+}
+
+function bindTurboButton(element, button) {
+    const press = async (event) => {
+        event.preventDefault();
+        await ensureAudio();
+        stopTurboButton(element, button);
+        let pressed = false;
+        const tick = () => {
+            if (pressed) {
+                releaseButton(button, element);
+            } else {
+                pressButton(button, element);
+            }
+            pressed = !pressed;
+        };
+        tick();
+        turboTimers.set(element, window.setInterval(tick, TURBO_INTERVAL_MS));
+    };
+
+    const release = (event) => {
+        event.preventDefault();
+        stopTurboButton(element, button);
     };
 
     if (window.PointerEvent) {
@@ -793,7 +971,10 @@ if (window.PointerEvent) {
 }
 
 bindActionButton(document.getElementById("btn-a"), Buttons.a);
-bindActionButton(document.getElementById("btn-b"), Buttons.b);
+bindActionButton(document.getElementById("btn-a"), Buttons.b);
+bindActionButton(document.getElementById("btn-b"), Buttons.a);
+bindTurboButton(document.getElementById("btn-c"), Buttons.b);
+bindTurboButton(document.getElementById("btn-d"), Buttons.a);
 bindActionButton(document.getElementById("btn-start"), Buttons.start);
 bindActionButton(document.getElementById("btn-select"), Buttons.select);
 pauseButton.addEventListener("click", () => {
@@ -963,22 +1144,39 @@ window.addEventListener("keyup", (event) => {
 
 window.addEventListener("blur", () => {
     releaseAllButtons();
+    resetEmulatorTiming();
 });
 
 audioButton.addEventListener("click", async () => {
     await toggleMute();
 });
 
+speedSlider.addEventListener("input", (event) => {
+    applySpeedPercent(event.target.value, true);
+});
+
 window.addEventListener("pointerdown", () => {
     ensureAudio();
 }, { once: true });
 
+function updatePauseButton() {
+    pauseButton.textContent = "\u6682\u505c";
+    pauseButton.classList.toggle("pause-active", isPaused);
+}
+
+function updateMuteButton() {
+    audioButton.textContent = "\u9759\u97f3";
+    audioButton.classList.toggle("pause-active", isMuted);
+}
+
 async function boot() {
     initCanvas();
+    applySpeedPercent(readSavedSpeedPercent(), false);
     updatePauseButton();
     updateMuteButton();
     updateRuntimeButtons();
     updateSaveInfo();
+    rebuildNes();
     await initGameLibrary();
     const initialGame = games.find((game) => game.file === selectedGameFile) || games[0];
 

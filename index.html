@@ -8,7 +8,7 @@
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
     <title>RW Pocket - JSNES</title>
-    <link rel="stylesheet" type="text/css" href="./index.css?v=6">
+    <link rel="stylesheet" type="text/css" href="./index.css?v=14">
 </head>
 <body>
 <main class="page">
@@ -19,13 +19,23 @@
                 <div id="current-game" class="current-game">1943</div>
             </div>
             <div class="top-actions">
-                <button id="open-library" class="tiny-btn library-btn" type="button">Game Library</button>
                 <div class="power-wrap">
                     <span class="led"></span>
                     <span id="status-text">Booting</span>
                 </div>
             </div>
         </header>
+        <div class="top-action-buttons">
+            <button id="open-shortcuts" class="icon-btn shortcut-icon-btn" type="button" aria-label="&#24555;&#25463;&#38190;&#35828;&#26126;">?</button>
+            <button id="open-library" class="tiny-btn library-btn" type="button">&#28216;&#25103;&#20179;&#24211;</button>
+        </div>
+
+        <div class="screen-toolbar">
+            <label class="speed-control" for="speed-slider">
+                <span class="speed-label"><span>&#36895;&#24230;&#65306;</span><strong id="speed-value">100%</strong></span>
+                <input id="speed-slider" class="speed-slider" type="range" min="50" max="150" step="5" value="100" aria-label="&#36895;&#24230;&#35843;&#33410;">
+            </label>
+        </div>
 
         <div class="screen-bezel">
             <canvas id="nes-canvas" width="256" height="240"></canvas>
@@ -41,38 +51,39 @@
             </div>
 
             <div class="middle-controls">
-                <button id="btn-select" class="pill-btn" type="button">SELECT</button>
-                <button id="btn-start" class="pill-btn" type="button">START</button>
+                <button id="btn-select" class="pill-btn" type="button">&#20999;&#25442;</button>
+                <button id="btn-start" class="pill-btn" type="button">&#24320;&#22987;</button>
             </div>
 
             <div class="right-controls">
                 <button id="btn-b" class="action-btn btn-b" type="button">B</button>
                 <button id="btn-a" class="action-btn btn-a" type="button">A</button>
+                <button id="btn-d" class="action-btn btn-d turbo-btn" type="button">D</button>
+                <button id="btn-c" class="action-btn btn-c turbo-btn" type="button">C</button>
             </div>
         </section>
 
         <footer class="help-bar">
-            <button id="open-shortcuts" class="tiny-btn shortcut-btn" type="button">快捷键说明</button>
             <div class="help-actions">
-                <button id="toggle-pause" class="tiny-btn" type="button">暂停</button>
-                <button id="save-state" class="tiny-btn" type="button">存档</button>
-                <button id="load-state" class="tiny-btn" type="button">读档</button>
-                <button id="resume-audio" class="tiny-btn" type="button">静音</button>
+                <button id="toggle-pause" class="tiny-btn" type="button">&#26242;&#20572;</button>
+                <button id="save-state" class="tiny-btn" type="button">&#23384;&#26723;</button>
+                <button id="load-state" class="tiny-btn" type="button">&#35835;&#26723;</button>
+                <button id="resume-audio" class="tiny-btn" type="button">&#38745;&#38899;</button>
             </div>
         </footer>
 
         <section id="shortcut-overlay" class="shortcut-overlay is-hidden" aria-hidden="true">
             <div class="shortcut-panel">
                 <div class="shortcut-header">
-                    <h3>快捷键说明</h3>
-                    <button id="close-shortcuts" class="tiny-btn" type="button">关闭</button>
+                    <h3>&#24555;&#25463;&#38190;&#35828;&#26126;</h3>
+                    <button id="close-shortcuts" class="tiny-btn" type="button">&#20851;&#38381;</button>
                 </div>
                 <ul class="shortcut-list">
-                    <li><span>方向（上/下/左/右）</span><code>W / S / A / D</code></li>
+                    <li><span>&#26041;&#21521;&#65288;&#19978;/&#19979;/&#24038;/&#21491;&#65289;</span><code>W / S / A / D</code></li>
                     <li><span>A / B</span><code>K / J</code></li>
                     <li><span>Select / Start</span><code>[ / ]</code></li>
-                    <li><span>存档 / 读档</span><code>- / =</code></li>
-                    <li><span>暂停 / 恢复</span><code>Enter</code></li>
+                    <li><span>&#23384;&#26723; / &#35835;&#26723;</span><code>- / =</code></li>
+                    <li><span>&#26242;&#20572; / &#32487;&#32493;</span><code>Enter</code></li>
                 </ul>
             </div>
         </section>
@@ -103,6 +114,6 @@
 </main>
 
 <script src="./jsnes.min.js"></script>
-<script src="./index.js?v=6"></script>
+<script src="./index.js?v=14"></script>
 </body>
 </html>

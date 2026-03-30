@@ -1,6 +1,7 @@
 :root {
     --bg-top: #090f19;
     --bg-mid: #18283b;
+    --bg-bottom: #05111f;
     --shell-1: #d5dee9;
     --shell-2: #9ba9bb;
     --shell-edge: #73829b;
@@ -12,6 +13,7 @@
     --warn: #ffbc44;
     --text-main: #eaf3ff;
     --text-dim: #acc0d7;
+    --speed-fill: 50%;
 }
 
 * {
@@ -28,6 +30,7 @@ body {
 }
 
 body {
+    position: relative;
     font-family: "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
     color: var(--text-main);
     background:
@@ -37,24 +40,76 @@ body {
     overflow: hidden;
 }
 
+body::before,
+body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+}
+
+body::before {
+    background:
+        linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+    background-size: 34px 34px;
+    mask-image: radial-gradient(circle at center, black 35%, transparent 88%);
+    opacity: 0.35;
+}
+
+body::after {
+    background:
+        radial-gradient(circle at 50% 50%, rgba(139, 215, 255, 0.08), transparent 42%),
+        radial-gradient(circle at 50% 80%, rgba(255, 208, 116, 0.06), transparent 26%);
+}
+
 .page {
     min-height: 100vh;
     display: grid;
     place-items: center;
-    padding: 1.2rem;
+    padding: 0.8rem;
 }
 
 .console-shell {
     position: relative;
-    width: min(980px, 96vw);
+    width: min(760px, 95vw);
     border-radius: 2rem;
-    background: linear-gradient(165deg, var(--shell-1), var(--shell-2));
-    border: 2px solid rgba(255, 255, 255, 0.25);
+    background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.34), rgba(255, 255, 255, 0.05)),
+        linear-gradient(160deg, #d9e3ef, #a3b2c5 52%, #8597ad);
+    border: 1px solid rgba(255, 255, 255, 0.28);
     box-shadow:
-        0 28px 80px rgba(0, 0, 0, 0.45),
+        0 30px 90px rgba(0, 0, 0, 0.48),
+        0 0 0 1px rgba(125, 186, 228, 0.08),
         inset 0 2px 10px rgba(255, 255, 255, 0.35),
-        inset 0 -10px 16px rgba(0, 0, 0, 0.2);
-    padding: 1rem 1rem 1.25rem;
+        inset 0 -12px 18px rgba(0, 0, 0, 0.16);
+    padding: 0.82rem 0.82rem 0.9rem;
+    overflow: hidden;
+}
+
+.console-shell::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+    background:
+        radial-gradient(circle at 20% 10%, rgba(255, 255, 255, 0.34), transparent 24%),
+        radial-gradient(circle at 78% 90%, rgba(44, 89, 155, 0.16), transparent 32%);
+}
+
+.console-shell::after {
+    content: "";
+    position: absolute;
+    left: 1rem;
+    right: 1rem;
+    bottom: 0.72rem;
+    height: 1.8rem;
+    border-radius: 1rem;
+    background: linear-gradient(180deg, rgba(120, 138, 158, 0.18), rgba(57, 72, 91, 0.05));
+    filter: blur(10px);
+    opacity: 0.55;
+    pointer-events: none;
 }
 
 .console-top {
@@ -62,19 +117,19 @@ body {
     justify-content: space-between;
     align-items: center;
     color: #1f2f47;
-    margin-bottom: 0.8rem;
+    margin-bottom: 0.42rem;
     font-weight: 700;
     letter-spacing: 0.05em;
 }
 
 .brand {
-    font-size: clamp(1rem, 2.4vw, 1.45rem);
+    font-size: clamp(0.96rem, 2vw, 1.18rem);
     text-transform: uppercase;
 }
 
 .current-game {
-    margin-top: 0.1rem;
-    font-size: 0.73rem;
+    margin-top: 0.08rem;
+    font-size: 0.66rem;
     font-weight: 600;
     color: #37506f;
     letter-spacing: 0.03em;
@@ -87,14 +142,21 @@ body {
 .top-actions {
     display: flex;
     align-items: center;
-    gap: 0.6rem;
+    gap: 0.45rem;
 }
+
+.top-action-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.38rem;
+}
+
 
 .power-wrap {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
-    font-size: 0.82rem;
+    gap: 0.4rem;
+    font-size: 0.74rem;
 }
 
 .led {
@@ -108,12 +170,91 @@ body {
 
 .screen-bezel {
     position: relative;
-    background: linear-gradient(180deg, var(--screen-frame), #222c3b);
+    background:
+        linear-gradient(180deg, rgba(69, 84, 108, 0.9), rgba(31, 42, 58, 0.98)),
+        linear-gradient(135deg, rgba(255, 255, 255, 0.08), transparent);
     border-radius: 1.2rem;
-    padding: 0.8rem;
+    padding: 0.72rem;
     box-shadow:
         inset 0 2px 12px rgba(255, 255, 255, 0.06),
-        inset 0 -4px 16px rgba(0, 0, 0, 0.42);
+        inset 0 -4px 16px rgba(0, 0, 0, 0.42),
+        0 14px 28px rgba(10, 19, 31, 0.22);
+}
+
+.screen-toolbar {
+    display: flex;
+    justify-content: center;
+    margin: 0 0 0.36rem;
+    padding: 0.4rem 0 0.05rem 0.05rem;
+}
+
+.speed-control {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: center;
+    gap: 0.8rem;
+    width: min(100%, 100%);
+    min-height: 1.7rem;
+    padding: 0.14rem 0.6rem 0.16rem;
+    border-radius: 999px;
+    background:
+        linear-gradient(180deg, rgba(20, 33, 49, 0.56), rgba(11, 20, 31, 0.34)),
+        linear-gradient(90deg, rgba(95, 201, 255, 0.08), rgba(255, 208, 116, 0.05));
+    border: 1px solid rgba(170, 207, 235, 0.14);
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.08),
+        0 8px 18px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(8px);
+}
+
+.speed-label {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.2rem;
+    color: #dcecfb;
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    white-space: nowrap;
+}
+
+.speed-label strong {
+    color: #f8fbff;
+    font-size: 0.72rem;
+}
+
+.speed-slider {
+    appearance: none;
+    width: 100%;
+    height: 0.24rem;
+    border-radius: 999px;
+    background:
+        linear-gradient(90deg, rgba(240, 248, 255, 0.95) 0%, rgba(240, 248, 255, 0.95) var(--speed-fill), rgba(255, 255, 255, 0.2) var(--speed-fill), rgba(255, 255, 255, 0.2) 100%);
+    outline: none;
+    box-shadow:
+        inset 0 1px 3px rgba(2, 9, 18, 0.18),
+        0 0 0 1px rgba(255, 255, 255, 0.04);
+}
+
+.speed-slider::-webkit-slider-thumb {
+    appearance: none;
+    width: 0.72rem;
+    height: 0.72rem;
+    border-radius: 50%;
+    background: #ffffff;
+    border: 1px solid rgba(15, 42, 63, 0.24);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.22);
+    cursor: pointer;
+}
+
+.speed-slider::-moz-range-thumb {
+    width: 0.72rem;
+    height: 0.72rem;
+    border-radius: 50%;
+    background: #ffffff;
+    border: 1px solid rgba(15, 42, 63, 0.24);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.22);
+    cursor: pointer;
 }
 
 #nes-canvas {
@@ -152,8 +293,9 @@ body {
     display: grid;
     grid-template-columns: minmax(180px, 1fr) auto minmax(180px, 1fr);
     align-items: center;
-    gap: clamp(0.8rem, 2.5vw, 2rem);
-    margin-top: 1rem;
+    gap: clamp(0.6rem, 1.6vw, 1.2rem);
+    margin-top: 0.7rem;
+    padding: 0.05rem 0.05rem 0;
 }
 
 .left-controls,
@@ -163,7 +305,7 @@ body {
 }
 
 .stick-zone {
-    width: clamp(150px, 28vw, 230px);
+    width: clamp(138px, 20vw, 178px);
     aspect-ratio: 1;
     position: relative;
     border-radius: 50%;
@@ -172,16 +314,16 @@ body {
 
 .stick-base {
     position: absolute;
-    inset: 7%;
+    inset: 8%;
     border-radius: 50%;
     background:
         radial-gradient(circle at 30% 30%, #5d6f83, #364353 70%),
         linear-gradient(135deg, #49586c, #2a3544);
-    border: 6px solid #1f2733;
+    border: 5px solid #1f2733;
     box-shadow:
         inset 0 3px 10px rgba(255, 255, 255, 0.2),
         inset 0 -10px 18px rgba(0, 0, 0, 0.42),
-        0 12px 24px rgba(0, 0, 0, 0.32);
+        0 10px 18px rgba(0, 0, 0, 0.24);
 }
 
 .stick-knob {
@@ -193,32 +335,35 @@ body {
     border-radius: 50%;
     background:
         radial-gradient(circle at 32% 28%, #ff7d90, #c5394f 55%, #741b2d 100%);
-    border: 4px solid #2b0f16;
+    border: 3px solid #2b0f16;
     box-shadow:
-        0 8px 16px rgba(0, 0, 0, 0.4),
+        0 6px 12px rgba(0, 0, 0, 0.34),
         inset 0 2px 8px rgba(255, 255, 255, 0.2);
     transition: transform 0.06s linear;
 }
 
 .middle-controls {
     display: flex;
-    gap: 0.6rem;
-    align-items: center;
+    flex-direction: column;
+    gap: 0.38rem;
+    align-items: stretch;
     justify-content: center;
+    align-self: center;
+    margin-top: 0.4rem;
 }
 
 .pill-btn {
     border: 0;
     border-radius: 999px;
-    min-width: 92px;
-    padding: 0.5rem 0.9rem;
+    min-width: 66px;
+    padding: 0.34rem 0.58rem;
     background: linear-gradient(180deg, #405168, #283549);
     color: #d9e8fb;
     font-weight: 700;
     letter-spacing: 0.04em;
-    font-size: 0.78rem;
+    font-size: 0.62rem;
     box-shadow:
-        0 8px 14px rgba(0, 0, 0, 0.28),
+        0 5px 10px rgba(0, 0, 0, 0.22),
         inset 0 1px 2px rgba(255, 255, 255, 0.24);
     touch-action: none;
 }
@@ -229,24 +374,25 @@ body {
 }
 
 .right-controls {
-    width: clamp(160px, 30vw, 250px);
-    aspect-ratio: 1.2;
+    width: clamp(146px, 20vw, 188px);
+    aspect-ratio: 1.22;
     position: relative;
+    margin-right: 0;
 }
 
 .action-btn {
     border: 0;
-    width: clamp(70px, 12vw, 98px);
+    width: clamp(54px, 8vw, 68px);
     aspect-ratio: 1;
     border-radius: 50%;
     position: absolute;
-    font-size: clamp(1rem, 3vw, 1.45rem);
+    font-size: clamp(0.9rem, 2vw, 1.1rem);
     font-weight: 800;
     color: #fff;
     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.45);
     box-shadow:
-        0 12px 20px rgba(0, 0, 0, 0.34),
-        inset 0 2px 7px rgba(255, 255, 255, 0.26);
+        0 8px 14px rgba(0, 0, 0, 0.28),
+        inset 0 2px 6px rgba(255, 255, 255, 0.24);
     touch-action: none;
 }
 
@@ -254,14 +400,46 @@ body {
     right: 0;
     top: 0;
     background: radial-gradient(circle at 25% 25%, #57dcff, #1f9ecf 70%, #106383);
-    border: 4px solid #0d3242;
+    border: 3px solid #0d3242;
 }
 
 .btn-b {
     left: 0;
     bottom: 0;
     background: radial-gradient(circle at 25% 25%, #ffa88f, #ff6a53 65%, #b72b1c);
-    border: 4px solid #4d1c16;
+    border: 3px solid #4d1c16;
+}
+
+.btn-c {
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle at 25% 25%, #ffe48a, #ffb53c 68%, #ba6d14);
+    border: 3px solid #5b3610;
+}
+
+.btn-d {
+    left: 0;
+    top: 0;
+    background: radial-gradient(circle at 25% 25%, #b8ffa7, #57cf6d 68%, #23773a);
+    border: 3px solid #184826;
+}
+
+.turbo-btn::after {
+    content: "T";
+    position: absolute;
+    top: -0.28rem;
+    right: -0.16rem;
+    min-width: 1rem;
+    height: 1rem;
+    padding: 0 0.18rem;
+    border-radius: 999px;
+    background: rgba(8, 16, 28, 0.82);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    color: rgba(255, 255, 255, 0.92);
+    font-size: 0.52rem;
+    line-height: 0.95rem;
+    text-align: center;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.22);
 }
 
 .action-btn.is-pressed {
@@ -270,9 +448,9 @@ body {
 }
 
 .help-bar {
-    margin-top: 1rem;
+    margin-top: 0.7rem;
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
     color: var(--text-dim);
     font-size: 0.8rem;
@@ -285,7 +463,9 @@ body {
     column-gap: 0.6rem;
     row-gap: 0.55rem;
     flex-wrap: wrap;
-    justify-content: flex-end;
+    justify-content: center;
+    position: relative;
+    z-index: 1;
 }
 
 .tiny-btn {
@@ -293,16 +473,31 @@ body {
     background: rgba(12, 30, 52, 0.8);
     color: #d9f6ff;
     border-radius: 0.6rem;
-    min-height: 2.06rem;
-    min-width: 4.6rem;
-    padding: 0.4rem 0.72rem;
-    font-size: 0.76rem;
+    min-height: 1.78rem;
+    min-width: 3.9rem;
+    padding: 0.32rem 0.58rem;
+    font-size: 0.68rem;
     white-space: nowrap;
 }
 
-.shortcut-btn {
-    min-width: 6.3rem;
-    background: linear-gradient(180deg, #3f4d61, #293547);
+.icon-btn {
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    background: linear-gradient(180deg, rgba(46, 72, 101, 0.92), rgba(26, 40, 61, 0.92));
+    color: #ebf8ff;
+    display: inline-grid;
+    place-items: center;
+    cursor: pointer;
+}
+
+.shortcut-icon-btn {
+    width: 1.84rem;
+    height: 1.84rem;
+    border-radius: 999px;
+    font-size: 0.9rem;
+    font-weight: 800;
+    box-shadow:
+        0 6px 12px rgba(0, 0, 0, 0.14),
+        inset 0 1px 1px rgba(255, 255, 255, 0.25);
 }
 
 .tiny-btn:disabled {
@@ -317,6 +512,7 @@ body {
 
 .library-btn {
     background: linear-gradient(180deg, #2e4a6d, #20334c);
+    min-width: 4.9rem;
 }
 
 .tiny-btn:active {
@@ -574,67 +770,242 @@ body {
 }
 
 @media (max-width: 760px) {
+    html,
+    body,
+    .page {
+        min-height: 100svh;
+    }
+
     body {
-        overflow: auto;
+        overflow: hidden;
+        background:
+            radial-gradient(circle at 20% 10%, rgba(92, 214, 255, 0.18), transparent 26%),
+            radial-gradient(circle at 80% 90%, rgba(255, 183, 90, 0.14), transparent 24%),
+            linear-gradient(180deg, #07111d, #0d1a2b 46%, #081321);
     }
 
     .page {
-        padding: 0.6rem;
+        padding: 0.65rem 0.5rem;
     }
 
     .console-shell {
-        border-radius: 1.3rem;
-        padding: 0.75rem;
+        width: min(100%, 430px);
+        min-height: calc(100svh - 1.3rem);
+        border-radius: 1.75rem 1.75rem 1.45rem 1.45rem;
+        display: grid;
+        grid-template-rows: auto auto auto auto 1fr auto;
+        padding: max(0.72rem, env(safe-area-inset-top)) 0.82rem max(0.85rem, env(safe-area-inset-bottom));
+        border: 2px solid rgba(240, 247, 255, 0.5);
+        background:
+            linear-gradient(180deg, rgba(233, 239, 247, 0.98), rgba(188, 201, 218, 0.99)),
+            linear-gradient(165deg, #d9e3ef, #93a5bc 56%, #7f90a6);
+        box-shadow:
+            0 16px 40px rgba(2, 8, 20, 0.42),
+            inset 0 0 0 3px rgba(255, 255, 255, 0.42),
+            inset 0 0 0 7px rgba(72, 91, 117, 0.1),
+            0 0 36px rgba(75, 151, 232, 0.08);
+    }
+
+    .console-shell::before,
+    .console-shell::after {
+        content: "";
+        position: absolute;
+        left: 0.52rem;
+        right: 0.52rem;
+        border-radius: 1.08rem;
+        pointer-events: none;
+        background: linear-gradient(180deg, rgba(255, 255, 255, 0.24), rgba(255, 255, 255, 0.05));
+        /*border: 1px solid rgba(75, 95, 122, 0.12);*/
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.34);
+    }
+
+    .console-shell::before {
+        top: 0.42rem;
+        height: 5.35rem;
+    }
+
+    .console-shell::after {
+        bottom: 0.42rem;
+        height: 4.65rem;
+    }
+
+    .console-top,
+    .screen-toolbar,
+    .screen-bezel,
+    .control-panel,
+    .help-bar {
+        position: relative;
+        z-index: 1;
+    }
+
+    .console-top {
+        margin-top: 1rem;
+        margin-bottom: 0.4rem;
+        align-items: center;
+    }
+
+    .brand {
+        font-size: 0.9rem;
+    }
+
+    .current-game {
+        max-width: 44vw;
+        font-size: 0.62rem;
+    }
+
+    .top-actions {
+        gap: 0.35rem;
+    }
+
+    .power-wrap {
+        font-size: 0.7rem;
+    }
+
+    .shortcut-icon-btn {
+        width: 1.9rem;
+        height: 1.9rem;
+    }
+
+    .library-btn {
+        min-width: 5.1rem;
+    }
+
+    .screen-toolbar {
+        margin: 0 0.14rem 0.38rem;
+    }
+
+    .speed-control {
+        min-height: 1.65rem;
+        padding: 0.08rem 0.5rem 0.12rem;
+        gap: 0.48rem;
+    }
+
+    .speed-label {
+        font-size: 0.6rem;
+    }
+
+    .speed-label strong {
+        font-size: 0.66rem;
+    }
+
+    .screen-bezel {
+        padding: 0.56rem;
+        border-radius: 1.08rem;
+        margin: 0 0.14rem 0.62rem;
+    }
+
+    #nes-canvas {
+        width: 100%;
+        height: auto;
+        min-height: min(58vw, 320px);
     }
 
     .control-panel {
-        grid-template-columns: 1fr 1fr;
+        grid-template-columns: minmax(110px, 1fr) minmax(120px, 1fr);
         grid-template-areas:
-            "left right"
-            "mid mid";
+            "mid mid"
+            "left right";
+        align-items: end;
+        gap: 0.46rem 0.55rem;
+        margin-top: 0;
+        padding: 0 0.34rem;
     }
 
     .left-controls {
         grid-area: left;
+        justify-self: start;
+        align-self: end;
+    }
+
+    .middle-controls {
+        grid-area: mid;
+        flex-direction: row;
+        justify-content: center;
+        gap: 0.5rem;
+        align-self: start;
+        margin-bottom: 0.1rem;
     }
 
     .right-controls {
         grid-area: right;
         justify-self: end;
+        width: min(34vw, 136px);
+        aspect-ratio: 1;
     }
 
-    .middle-controls {
-        grid-area: mid;
-        margin-top: 0.4rem;
+    .stick-zone {
+        width: min(30vw, 118px);
+        filter: drop-shadow(0 10px 16px rgba(30, 40, 55, 0.16));
+    }
+
+    .pill-btn {
+        min-width: 3.1rem;
+        padding: 0.34rem 0.28rem;
+        font-size: 0.56rem;
+    }
+
+    .action-btn {
+        width: min(14.2vw, 50px);
+        font-size: 0.72rem;
+        box-shadow:
+            0 8px 14px rgba(0, 0, 0, 0.22),
+            inset 0 2px 5px rgba(255, 255, 255, 0.24);
+    }
+
+    .action-btn::before {
+        content: "";
+        position: absolute;
+        inset: -0.2rem;
+        border-radius: 50%;
+    }
+
+    .btn-c,
+    .btn-d {
+        width: min(15vw, 54px);
+        font-size: 0.76rem;
+    }
+
+    .btn-c {
+        transform: translate(0.02rem, 0.02rem);
+    }
+
+    .btn-d {
+        transform: translate(-0.02rem, -0.01rem);
+    }
+
+    .turbo-btn::after {
+        top: -0.16rem;
+        right: -0.06rem;
+        min-width: 0.76rem;
+        height: 0.76rem;
+        font-size: 0.4rem;
+        line-height: 0.72rem;
     }
 
     .help-bar {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 0.5rem;
+        margin-top: auto;
+        padding: 7rem 0 0 0;
     }
 
     .help-actions {
-        justify-content: flex-start;
+        width: 100%;
+        justify-content: center;
+        padding: 0.34rem 0.3rem;
+        border-radius: 0.88rem;
+        background: linear-gradient(180deg, rgba(131, 151, 176, 0.16), rgba(90, 108, 131, 0.06));
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.24);
+    }
+
+    .tiny-btn {
+        min-height: 1.72rem;
+        min-width: 3.55rem;
+        padding: 0.28rem 0.5rem;
+        font-size: 0.64rem;
     }
 
     .shortcut-list li {
         flex-direction: column;
         align-items: flex-start;
-    }
-
-    .console-top {
-        align-items: flex-start;
-        gap: 0.35rem;
-    }
-
-    .top-actions {
-        flex-direction: column;
-        align-items: flex-end;
-    }
-
-    .current-game {
-        max-width: 56vw;
     }
 
     .library-panel {
