@@ -13,7 +13,7 @@
     --warn: #ffbc44;
     --text-main: #eaf3ff;
     --text-dim: #acc0d7;
-    --speed-fill: 50%;
+    --speed-fill: 100%;
 }
 
 * {
@@ -305,11 +305,150 @@ body::after {
 }
 
 .stick-zone {
-    width: clamp(138px, 20vw, 178px);
+    width: clamp(200px, 30vw, 260px);
     aspect-ratio: 1;
     position: relative;
     border-radius: 50%;
     touch-action: none;
+}
+
+.dpad-zone {
+    width: clamp(200px, 30vw, 260px);
+    aspect-ratio: 1;
+    position: relative;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr;
+    grid-template-areas:
+        ". up ."
+        "left center right"
+        ". down .";
+    touch-action: none;
+}
+
+.dpad-zone.is-hidden {
+    display: none;
+}
+
+.stick-zone.is-hidden {
+    display: none;
+}
+
+.dpad-btn {
+    border: none;
+    background: linear-gradient(180deg, #5d6f83, #364353);
+    box-shadow:
+        inset 0 2px 6px rgba(255, 255, 255, 0.15),
+        inset 0 -4px 10px rgba(0, 0, 0, 0.35),
+        0 4px 8px rgba(0, 0, 0, 0.25);
+    cursor: pointer;
+    position: relative;
+    touch-action: none;
+}
+
+.dpad-btn::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.1), transparent);
+    pointer-events: none;
+}
+
+.dpad-btn:active,
+.dpad-btn.is-pressed {
+    filter: brightness(1.2);
+    box-shadow:
+        inset 0 3px 8px rgba(0, 0, 0, 0.4),
+        0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.dpad-up {
+    grid-area: up;
+    border-radius: 0.5rem 0.5rem 0 0;
+    border: 3px solid #1f2733;
+    border-bottom: none;
+}
+
+.dpad-up::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 55%;
+    transform: translate(-50%, -50%);
+    width: 0;
+    height: 0;
+    border-left: 12px solid transparent;
+    border-right: 12px solid transparent;
+    border-bottom: 18px solid rgba(200, 220, 240, 0.9);
+}
+
+.dpad-down {
+    grid-area: down;
+    border-radius: 0 0 0.5rem 0.5rem;
+    border: 3px solid #1f2733;
+    border-top: none;
+}
+
+.dpad-down::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 45%;
+    transform: translate(-50%, -50%);
+    width: 0;
+    height: 0;
+    border-left: 12px solid transparent;
+    border-right: 12px solid transparent;
+    border-top: 18px solid rgba(200, 220, 240, 0.9);
+}
+
+.dpad-left {
+    grid-area: left;
+    border-radius: 0.5rem 0 0 0.5rem;
+    border: 3px solid #1f2733;
+    border-right: none;
+}
+
+.dpad-left::after {
+    content: "";
+    position: absolute;
+    left: 55%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 0;
+    height: 0;
+    border-top: 12px solid transparent;
+    border-bottom: 12px solid transparent;
+    border-right: 18px solid rgba(200, 220, 240, 0.9);
+}
+
+.dpad-right {
+    grid-area: right;
+    border-radius: 0 0.5rem 0.5rem 0;
+    border: 3px solid #1f2733;
+    border-left: none;
+}
+
+.dpad-right::after {
+    content: "";
+    position: absolute;
+    left: 45%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 0;
+    height: 0;
+    border-top: 12px solid transparent;
+    border-bottom: 12px solid transparent;
+    border-left: 18px solid rgba(200, 220, 240, 0.9);
+}
+
+.dpad-center {
+    grid-area: center;
+    background: linear-gradient(145deg, #4a5a6d, #2f3a4a);
+    border: 3px solid #1f2733;
+    box-shadow:
+        inset 0 2px 6px rgba(255, 255, 255, 0.1),
+        inset 0 -4px 10px rgba(0, 0, 0, 0.3);
 }
 
 .stick-base {
@@ -934,8 +1073,36 @@ body::after {
     }
 
     .stick-zone {
-        width: min(30vw, 118px);
+        width: min(36vw, 140px);
         filter: drop-shadow(0 10px 16px rgba(30, 40, 55, 0.16));
+    }
+
+    .dpad-zone {
+        width: min(36vw, 140px);
+    }
+
+    .dpad-up::after {
+        border-left: 8px solid transparent;
+        border-right: 8px solid transparent;
+        border-bottom: 12px solid rgba(200, 220, 240, 0.9);
+    }
+
+    .dpad-down::after {
+        border-left: 8px solid transparent;
+        border-right: 8px solid transparent;
+        border-top: 12px solid rgba(200, 220, 240, 0.9);
+    }
+
+    .dpad-left::after {
+        border-top: 8px solid transparent;
+        border-bottom: 8px solid transparent;
+        border-right: 12px solid rgba(200, 220, 240, 0.9);
+    }
+
+    .dpad-right::after {
+        border-top: 8px solid transparent;
+        border-bottom: 8px solid transparent;
+        border-left: 12px solid rgba(200, 220, 240, 0.9);
     }
 
     .pill-btn {

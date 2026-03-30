@@ -2,11 +2,11 @@ const SCREEN_WIDTH = 256;
 const SCREEN_HEIGHT = 240;
 const FRAMEBUFFER_SIZE = SCREEN_WIDTH * SCREEN_HEIGHT;
 const PLAYER_ONE = 1;
-const DEFAULT_ROM_FILE = "1943.nes";
+const DEFAULT_ROM_FILE = "超级玛莉.nes";
 const GAME_LIST_PATH = "./static/game-list.json?v=1";
 const SAVE_KEY_PREFIX = "rw-pocket:save:";
 const SAVE_SCHEMA_VERSION = 1;
-const SPEED_STORAGE_KEY = "rw-pocket:speed-percent";
+const SPEED_STORAGE_KEY = "rw-pocket:speed-percent:v2";
 const DEFAULT_SPEED_PERCENT = 100;
 const MIN_SPEED_PERCENT = 50;
 const MAX_SPEED_PERCENT = 150;
@@ -35,6 +35,8 @@ const statusText = document.getElementById("status-text");
 const audioButton = document.getElementById("resume-audio");
 const stickZone = document.getElementById("stick-zone");
 const stickKnob = document.getElementById("stick-knob");
+const dpadZone = document.getElementById("dpad-zone");
+const modeToggleButton = document.getElementById("btn-mode-toggle");
 const currentGameText = document.getElementById("current-game");
 const openLibraryButton = document.getElementById("open-library");
 const closeLibraryButton = document.getElementById("close-library");
@@ -117,7 +119,9 @@ function setCurrentGame(name) {
 }
 
 function getSaveKey(fileName) {
-    return `${SAVE_KEY_PREFIX}${encodeURIComponent(fileName)}`;
+    return `${SAVE_KEY_PREFIX}${fileName.split('').reduce((a, c) => ((a << 5) - a + c.charCodeAt(0)) | 0, 0).toString(16)}`;
+    // return `${SAVE_KEY_PREFIX}${encodeURIComponent(fileName)}`;
+
 }
 
 function clampSpeedPercent(value) {
@@ -268,8 +272,39 @@ function saveCurrentState() {
         updateSaveInfo();
     } catch (error) {
         console.error(error);
-        setStatus("Save Failed");
-        alert("Save failed. Browser storage may be full or unavailable.");
+        // 存储已满，清空所有旧存档后重试
+        if (error.name === "QuotaExceededError" || error.code === 22 || error.code === 1014) {
+            console.log("Storage full, clearing all old saves...");
+            clearAllSaves();
+            try {
+                localStorage.setItem(getSaveKey(currentGameFile), JSON.stringify(payload));
+                setStatus("Saved");
+                updateSaveInfo();
+                console.log("Save succeeded after clearing old saves");
+            } catch (retryError) {
+                setStatus("Save Failed");
+                alert("Save failed. Even after clearing old saves, the current game state is too large.");
+            }
+        } else {
+            setStatus("Save Failed");
+            alert("Save failed. Browser storage may be unavailable.");
+        }
+    }
+}
+
+function clearAllSaves() {
+    try {
+        const keysToRemove = [];
+        for (let i = 0; i < localStorage.length; i++) {
+            const key = localStorage.key(i);
+            if (key && key.startsWith(SAVE_KEY_PREFIX)) {
+                keysToRemove.push(key);
+            }
+        }
+        keysToRemove.forEach((key) => localStorage.removeItem(key));
+        console.log(`Cleared ${keysToRemove.length} old save(s)`);
+    } catch (error) {
+        console.error("Failed to clear old saves:", error);
     }
 }
 
@@ -523,12 +558,12 @@ async function loadRom(path, title, fileName) {
 }
 
 function updateLibraryMeta() {
-    gameCount.textContent = `${visibleGames.length} / ${games.length} games`;
+    gameCount.textContent = `${visibleGames.length} / ${games.length} 游戏`;
     const selected = games.find((game) => game.file === selectedGameFile);
     if (selected) {
-        librarySubtitle.textContent = `Selected: ${selected.title}`;
+        librarySubtitle.textContent = `当前选择: ${selected.title}`;
     } else {
-        librarySubtitle.textContent = "Pick a ROM to start instantly.";
+        librarySubtitle.textContent = "请选择一款游戏畅玩吧...";
     }
 }
 
@@ -970,11 +1005,10 @@ if (window.PointerEvent) {
     });
 }
 
-bindActionButton(document.getElementById("btn-a"), Buttons.a);
 bindActionButton(document.getElementById("btn-a"), Buttons.b);
 bindActionButton(document.getElementById("btn-b"), Buttons.a);
-bindTurboButton(document.getElementById("btn-c"), Buttons.b);
-bindTurboButton(document.getElementById("btn-d"), Buttons.a);
+bindTurboButton(document.getElementById("btn-c"), Buttons.a);
+bindTurboButton(document.getElementById("btn-d"), Buttons.b);
 bindActionButton(document.getElementById("btn-start"), Buttons.start);
 bindActionButton(document.getElementById("btn-select"), Buttons.select);
 pauseButton.addEventListener("click", () => {
@@ -1158,6 +1192,100 @@ speedSlider.addEventListener("input", (event) => {
 window.addEventListener("pointerdown", () => {
     ensureAudio();
 }, { once: true });
+
+// D-pad 8-direction handling
+const dpadButtons = dpadZone.querySelectorAll(".dpad-btn");
+const activeDpadDirections = new Set();
+
+function updateDpadDirectionState() {
+    const up = activeDpadDirections.has("up");
+    const down = activeDpadDirections.has("down");
+    const left = activeDpadDirections.has("left");
+    const right = activeDpadDirections.has("right");
+    setDirectional(up, down, left, right);
+}
+
+function handleDpadPress(direction, element) {
+    element.classList.add("is-pressed");
+    activeDpadDirections.add(direction);
+    updateDpadDirectionState();
+}
+
+function handleDpadRelease(direction, element) {
+    element.classList.remove("is-pressed");
+    activeDpadDirections.delete(direction);
+    updateDpadDirectionState();
+}
+
+function bindDpadButton(element, direction) {
+    const press = async (event) => {
+        event.preventDefault();
+        await ensureAudio();
+        handleDpadPress(direction, element);
+    };
+
+    const release = (event) => {
+        event.preventDefault();
+        handleDpadRelease(direction, element);
+    };
+
+    if (window.PointerEvent) {
+        element.addEventListener("pointerdown", async (event) => {
+            if (element.setPointerCapture) {
+                try {
+                    element.setPointerCapture(event.pointerId);
+                } catch (error) {
+                    console.debug("dpad setPointerCapture failed:", error);
+                }
+            }
+            await press(event);
+        });
+        element.addEventListener("pointerup", release);
+        element.addEventListener("pointercancel", release);
+        element.addEventListener("pointerleave", release);
+        return;
+    }
+
+    element.addEventListener("touchstart", press, { passive: false });
+    element.addEventListener("touchend", release, { passive: false });
+    element.addEventListener("touchcancel", release, { passive: false });
+    element.addEventListener("mousedown", press);
+    element.addEventListener("mouseup", release);
+    element.addEventListener("mouseleave", release);
+}
+
+// Bind all dpad buttons with their directions
+dpadButtons.forEach((btn) => {
+    const dir = btn.dataset.dir;
+    if (dir) {
+        bindDpadButton(btn, dir);
+    }
+});
+
+// Mode toggle functionality
+let isJoystickMode = true;
+
+function updateControlMode() {
+    if (isJoystickMode) {
+        // Joystick mode: show stick-zone, hide dpad-zone, button shows "十字"
+        stickZone.classList.remove("is-hidden");
+        dpadZone.classList.add("is-hidden");
+        modeToggleButton.textContent = "\u5341\u5b57"; // 十字
+    } else {
+        // D-pad mode: hide stick-zone, show dpad-zone, button shows "万向"
+        stickZone.classList.add("is-hidden");
+        dpadZone.classList.remove("is-hidden");
+        modeToggleButton.textContent = "\u4e07\u5411"; // 万向
+    }
+}
+
+modeToggleButton.addEventListener("click", () => {
+    isJoystickMode = !isJoystickMode;
+    updateControlMode();
+    // Release all buttons when switching modes
+    releaseAllButtons();
+    activeDpadDirections.clear();
+});
 
 function updatePauseButton() {
     pauseButton.textContent = "\u6682\u505c";

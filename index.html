@@ -48,9 +48,17 @@
                     <div class="stick-base"></div>
                     <div id="stick-knob" class="stick-knob"></div>
                 </div>
+                <div id="dpad-zone" class="dpad-zone is-hidden" aria-label="D-pad cross">
+                    <button class="dpad-btn dpad-up" data-dir="up" aria-label="Up"></button>
+                    <button class="dpad-btn dpad-down" data-dir="down" aria-label="Down"></button>
+                    <button class="dpad-btn dpad-left" data-dir="left" aria-label="Left"></button>
+                    <button class="dpad-btn dpad-right" data-dir="right" aria-label="Right"></button>
+                    <div class="dpad-center"></div>
+                </div>
             </div>
 
             <div class="middle-controls">
+                <button id="btn-mode-toggle" class="pill-btn mode-toggle-btn" type="button">&#21313;&#23383;</button>
                 <button id="btn-select" class="pill-btn" type="button">&#20999;&#25442;</button>
                 <button id="btn-start" class="pill-btn" type="button">&#24320;&#22987;</button>
             </div>
@@ -92,21 +100,21 @@
             <div class="library-panel">
                 <div class="library-header">
                     <div>
-                        <h2>Game Library</h2>
-                        <p id="library-subtitle">Pick a ROM to start instantly.</p>
+                        <h2>游戏仓库</h2>
+                        <p id="library-subtitle">请选择一款游戏畅玩吧...</p>
                     </div>
-                    <button id="close-library" class="tiny-btn" type="button">Close</button>
+                    <button id="close-library" class="tiny-btn" type="button">关闭</button>
                 </div>
                 <div class="library-toolbar">
-                    <input id="game-search" class="search-input" type="text" placeholder="Search game name...">
+                    <input id="game-search" class="search-input" type="text" placeholder="输入名称搜索...">
                     <div class="toolbar-right">
-                        <span id="game-count" class="game-count">0 games</span>
-                        <button id="random-game" class="tiny-btn" type="button">Random</button>
+                        <span id="game-count" class="game-count">0 游戏</span>
+                        <button id="random-game" class="tiny-btn" type="button">随机</button>
                     </div>
                 </div>
                 <div id="game-grid" class="game-grid"></div>
                 <div class="library-footer">
-                    <button id="load-selected" class="tiny-btn primary-btn" type="button">Load Selected</button>
+                    <button id="load-selected" class="tiny-btn primary-btn" type="button">确定</button>
                 </div>
             </div>
         </section>
