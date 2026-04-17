@@ -320,9 +320,9 @@ body::after {
     grid-template-columns: 1fr 1fr 1fr;
     grid-template-rows: 1fr 1fr 1fr;
     grid-template-areas:
-        ". up ."
+        "ul up ur"
         "left center right"
-        ". down .";
+        "dl down dr";
     touch-action: none;
 }
 
@@ -380,6 +380,50 @@ body::after {
     border-left: 12px solid transparent;
     border-right: 12px solid transparent;
     border-bottom: 18px solid rgba(200, 220, 240, 0.9);
+}
+
+.dpad-ul {
+    grid-area: ul;
+    background: transparent;
+    border: none;
+    box-shadow: none;
+}
+
+.dpad-ul::before {
+    display: none;
+}
+
+.dpad-ur {
+    grid-area: ur;
+    background: transparent;
+    border: none;
+    box-shadow: none;
+}
+
+.dpad-ur::before {
+    display: none;
+}
+
+.dpad-dr {
+    grid-area: dr;
+    background: transparent;
+    border: none;
+    box-shadow: none;
+}
+
+.dpad-dr::before {
+    display: none;
+}
+
+.dpad-dl {
+    grid-area: dl;
+    background: transparent;
+    border: none;
+    box-shadow: none;
+}
+
+.dpad-dl::before {
+    display: none;
 }
 
 .dpad-down {

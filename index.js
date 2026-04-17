@@ -1197,6 +1197,28 @@ window.addEventListener("pointerdown", () => {
 const dpadButtons = dpadZone.querySelectorAll(".dpad-btn");
 const activeDpadDirections = new Set();
 
+// Get references to main direction buttons for visual feedback
+const dpadUpBtn = dpadZone.querySelector('.dpad-up');
+const dpadDownBtn = dpadZone.querySelector('.dpad-down');
+const dpadLeftBtn = dpadZone.querySelector('.dpad-left');
+const dpadRightBtn = dpadZone.querySelector('.dpad-right');
+
+// Map diagonal directions to their component directions
+const diagonalMap = {
+    ul: ['up', 'left'],
+    ur: ['up', 'right'],
+    dl: ['down', 'left'],
+    dr: ['down', 'right']
+};
+
+// Map direction names to button elements
+const directionToButton = {
+    up: dpadUpBtn,
+    down: dpadDownBtn,
+    left: dpadLeftBtn,
+    right: dpadRightBtn
+};
+
 function updateDpadDirectionState() {
     const up = activeDpadDirections.has("up");
     const down = activeDpadDirections.has("down");
@@ -1206,14 +1228,41 @@ function updateDpadDirectionState() {
 }
 
 function handleDpadPress(direction, element) {
-    element.classList.add("is-pressed");
-    activeDpadDirections.add(direction);
+    // Check if this is a diagonal direction
+    const componentDirections = diagonalMap[direction];
+
+    if (componentDirections) {
+        // For diagonal buttons, add both component directions and trigger their visual feedback
+        componentDirections.forEach(dir => {
+            activeDpadDirections.add(dir);
+            const btn = directionToButton[dir];
+            if (btn) btn.classList.add("is-pressed");
+        });
+    } else {
+        // For main directions, just add the direction
+        element.classList.add("is-pressed");
+        activeDpadDirections.add(direction);
+    }
+
     updateDpadDirectionState();
 }
 
 function handleDpadRelease(direction, element) {
-    element.classList.remove("is-pressed");
-    activeDpadDirections.delete(direction);
+    const componentDirections = diagonalMap[direction];
+
+    if (componentDirections) {
+        // For diagonal buttons, remove both component directions and their visual feedback
+        componentDirections.forEach(dir => {
+            activeDpadDirections.delete(dir);
+            const btn = directionToButton[dir];
+            if (btn) btn.classList.remove("is-pressed");
+        });
+    } else {
+        // For main directions, just remove the direction
+        element.classList.remove("is-pressed");
+        activeDpadDirections.delete(direction);
+    }
+
     updateDpadDirectionState();
 }
 
@@ -1285,6 +1334,10 @@ modeToggleButton.addEventListener("click", () => {
     // Release all buttons when switching modes
     releaseAllButtons();
     activeDpadDirections.clear();
+    // Clear visual feedback on main direction buttons
+    Object.values(directionToButton).forEach(btn => {
+        if (btn) btn.classList.remove("is-pressed");
+    });
 });
 
 function updatePauseButton() {
